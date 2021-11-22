@@ -1,24 +1,24 @@
 const express = require('express')
 const router = express.Router()
+const { validation, controller, authorization } = require('../../middlewares')
+const {
+  contactModel: { JoiSchemaContact },
+} = require('../../models')
+const { contacts } = require('../../controllers')
 
-router.get('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+router.get('/', authorization(), controller(contacts.listContacts))
 
-router.get('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+router.get('/:contactId', authorization(), controller(contacts.getContactById))
 
-router.post('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+router.post('/', authorization(), validation(JoiSchemaContact), controller(contacts.addContact))
 
-router.delete('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+router.delete('/:contactId', authorization(), controller(contacts.removeContact))
 
-router.patch('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+router.patch(
+  '/:contactId',
+  authorization(),
+  validation(JoiSchemaContact),
+  controller(contacts.updateContact)
+)
 
 module.exports = router
